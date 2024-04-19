@@ -34,4 +34,4 @@ This is a dockerized Python project that uses the Discord.py and the OpenAI spee
 
 ## License
 
-This code is open sourced under the [MIT license](https://github.com/isthistechsupport/vn_webhooks/blob/main/LICENSE.md)
+This code is open sourced under the [MIT license](https://github.com/isthistechsupport/discord-vn-transcriber/blob/main/README.md)
