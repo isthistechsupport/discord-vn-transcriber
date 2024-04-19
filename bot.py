@@ -33,9 +33,27 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 
+def extract_message_metadata(message: discord.Message, attachment: discord.Attachment) -> tuple:
+    message_id = message.id
+    message_author = message.author.name
+    if message.channel.name:
+        message_channel = message.channel.name
+    else:
+        message_channel = None
+    if message.guild:
+        message_guild = message.guild.name
+    else:
+        message_guild = None
+    attachment_id = attachment.id
+    attachment_content_type = attachment.content_type
+    attachment_size = attachment.size
+    return message_id, message_author, message_channel, message_guild, attachment_id, attachment_content_type, attachment_size
+
+
 def validate_mime_type(audio_mime_type: str) -> bool:
     valid_mime_types = ['flac', 'mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'ogg', 'wav', 'webm']
     return any(mime_type in audio_mime_type for mime_type in valid_mime_types)
+
 
 def transcribe_audio(audio_buffer: BytesIO, audio_mime_type: str) -> str:
     headers = {
@@ -49,6 +67,7 @@ def transcribe_audio(audio_buffer: BytesIO, audio_mime_type: str) -> str:
     response = requests.post('https://api.openai.com/v1/audio/transcriptions', headers=headers, files=files)
     return response.json()['text']
 
+
 async def process_audio(audio_attachment: discord.Attachment) -> str:
     file_mime_type, file_size = audio_attachment.content_type, audio_attachment.size
     if not validate_mime_type(file_mime_type):
@@ -60,9 +79,11 @@ async def process_audio(audio_attachment: discord.Attachment) -> str:
         transcription = transcribe_audio(audio_file, file_mime_type)
         return transcription
 
+
 @client.event
 async def on_ready():
     logging.info(f'Logged in as {client.user} (ID: {client.user.id})')
+
 
 @client.event
 async def on_message(message: discord.Message):
@@ -71,16 +92,7 @@ async def on_message(message: discord.Message):
     if len(message.attachments) > 0:
         for attachment in message.attachments:
             if 'audio' in attachment.content_type:
-                message_id = message.id
-                message_author = message.author.name
-                message_channel = message.channel.name
-                if message.guild:
-                    message_guild = message.guild.name
-                else:
-                    message_guild = None
-                attachment_id = attachment.id
-                attachment_content_type = attachment.content_type
-                attachment_size = attachment.size
+                message_id, message_author, message_channel, message_guild, attachment_id, attachment_content_type, attachment_size = extract_message_metadata(message, attachment)
                 logging.info(f"Processing audio attachment with {message_id=}, {message_author=}, {message_channel=}, {message_guild=}, {attachment_id=}, {attachment_content_type=}, {attachment_size=} bytes")
                 transcription = await process_audio(attachment)
                 await message.reply(f"This message says: {transcription}")
