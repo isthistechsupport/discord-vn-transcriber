@@ -1,6 +1,6 @@
 # Discord Voicenote Transcriber
 
-This is a dockerized Python project that uses the Discord.py and the OpenAI speech-to-text Whisper 2 Model to return the transcription of any audio messages and voice notes that you send to it, or to any server where the bot is present to (and has permissions to read and send messages to).
+This is a dockerized Python project that uses the Discord.py library and the OpenAI speech-to-text Whisper 2 Model to return the transcription of any audio messages and voice notes that you send to it, or to any server where the bot is present to (and has permissions to read and send messages to).
 
 ## Installation
 
