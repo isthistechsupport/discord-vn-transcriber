@@ -34,4 +34,4 @@ This is a dockerized Python project that uses the Discord.py library and the Ope
 
 ## License
 
-This code is open sourced under the [MIT license](LICENSE.md)
+This code is open sourced under the [MIT license](LICENSE.txt)
