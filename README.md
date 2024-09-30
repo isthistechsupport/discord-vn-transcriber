@@ -8,11 +8,11 @@ This is a dockerized Python project that uses the Discord.py library and the Ope
 
 - Docker
 
-- A Papertrail log destination to log the function output to. If you don't have one, you'll need to log into (or create an account on) Papertrail, [create a new log destination](https://papertrailapp.com/destinations/new). Save the destination URL and port number.
+- We recommend you set up a log destination. We currently use [Papertrail](https://www.papertrail.com/). If you don't add one, localhost:514 will be used.
 
 - A Discord Bot Account with an associated static token and the Message Content Intent enabled. If you don't have a Discord bot account, follow [this guide](https://discordpy.readthedocs.io/en/latest/discord.html). If you don't know how to enable intents, follow [this guide](https://discordpy.readthedocs.io/en/latest/intents.html)
 
-- A OpenAI developer account and a related OpenAI project API key. If you don't have an OpenAI developer account, use [this guide](https://platform.openai.com/docs/quickstart?context=python) to get started. Once you're done with the "Account setup" instructions and have created a secret key, save the key value.
+- An OpenAI developer account and a related OpenAI project API key. If you don't have an OpenAI developer account, use [this guide](https://platform.openai.com/docs/quickstart?context=python) to get started. Once you're done with the "Account setup" instructions and have created a secret key, save the key value.
 
 ### Setup
 
@@ -28,10 +28,10 @@ This is a dockerized Python project that uses the Discord.py library and the Ope
 
   - `PAPERTRAIL_LOG_PORT` must be your Papertrail log destination port.
 
-- Build the docker image and run it. If you don't have any particular requirements, you can paste in your terminal `source run.sh`. It will build the Docker image, tag it, prune any dangling images, and run the container in interactive mode with networking enabled and removal on stop. Don't forget to detach from the container (usually by pressing Ctrl + P Ctrl + Q on Windows/Linux or Cmd + P Cmd + Q on Mac) before closing the terminal window.
+- Build the docker image and run it. If you don't have any particular requirements, you can paste in your terminal `source run.sh`. It will build the Docker image, tag it, prune any dangling images, run the container in detached mode with networking enabled and removal on stop, and print the container logs to your terminal in real time.
 
 - Done! You should now see the transcription of any audios or voice notes you send to the bot, or on any channel that the bot has access to.
 
 ## License
 
-This code is open sourced under the [MIT license](https://github.com/isthistechsupport/discord-vn-transcriber/blob/main/README.md)
+This code is open sourced under the [MIT license](LICENSE.md)

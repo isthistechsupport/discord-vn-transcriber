@@ -18,9 +18,9 @@ class ContextFilter(logging.Filter):
         return True
     
 
-syslog = SysLogHandler(address=(os.getenv('PAPERTRAIL_LOG_DESTINATION'), int(os.getenv('PAPERTRAIL_LOG_PORT'))), facility=SysLogHandler.LOG_USER)
+syslog = SysLogHandler(address=(os.getenv('LOG_DESTINATION', 'localhost'), int(os.getenv('LOG_PORT', '514'))), facility=SysLogHandler.LOG_USER)
 syslog.addFilter(ContextFilter())
-format = '%(asctime)s %(hostname)s discord_transcriber: %(message)s'
+format = '%(asctime)s %(hostname)s %(levelname)s discord_transcriber: %(message)s'
 formatter = logging.Formatter(format, datefmt='%b %d %H:%M:%S')
 syslog.setFormatter(formatter)
 logger = logging.getLogger()
@@ -86,8 +86,12 @@ async def on_message(message: discord.Message):
             if 'audio' in attachment.content_type:
                 message_id, message_author, attachment_id, attachment_content_type, attachment_size = extract_message_metadata(message, attachment)
                 logging.info(f"Processing audio attachment {message_id=}, {message_author=}, {attachment_id=}, {attachment_content_type=}, {attachment_size=} bytes")
-                transcription = await process_audio(attachment)
-                await message.reply(f"This message says: {transcription}")
+                try:
+                    transcription = await process_audio(attachment)
+                    await message.reply(f"This message says: {transcription}")
+                except Exception as e:
+                    logging.error(e, stack_info=True, exc_info=True)
+                    await message.reply("Sorry, an error occurred while processing this attachment. Please try again later.")
                     
 
 client.run(os.getenv('DISCORD_BOT_TOKEN'))
